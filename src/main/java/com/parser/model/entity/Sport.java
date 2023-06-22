@@ -1,13 +1,13 @@
 package com.parser.model.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
 
-@AllArgsConstructor
-@NoArgsConstructor
+import java.util.List;
+
 @Data
+@EqualsAndHashCode
 @Entity
 @Table(name = "sport")
 public class Sport {
@@ -16,4 +16,6 @@ public class Sport {
     private Long id;
     private String  name;
     private String url;
+//    @OneToMany
+//    private List<Tourney> tourneys;
 }

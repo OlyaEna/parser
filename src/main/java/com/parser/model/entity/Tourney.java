@@ -1,24 +1,21 @@
 package com.parser.model.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Data
 @Entity
+@EqualsAndHashCode
 @Table(name = "tourney")
 public class Tourney {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-
-    @ManyToOne(cascade = CascadeType.MERGE)
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private Sport sport;
     private String url;
-//    @OneToMany(fetch = FetchType.EAGER)
-//    private List<Event> events;
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    private Information information;
 }

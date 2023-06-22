@@ -1,27 +1,24 @@
 package com.parser.model.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
 
-import java.net.URL;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Data
 @Entity
+@EqualsAndHashCode
 @Table(name = "event")
 public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String  name;
+    private String name;
     private String url;
     private LocalTime time;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+//    @ManyToOne
     private Tourney tourney;
 
 }

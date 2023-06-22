@@ -1,42 +1,40 @@
 package com.parser.service.impl;
 
-import com.parser.model.entity.Event;
-import com.parser.model.entity.Sport;
-import com.parser.model.entity.Tourney;
-import com.parser.model.repository.EventRepository;
-import com.parser.model.repository.SportRepository;
-import com.parser.model.repository.TourneyRepository;
+import com.parser.dto.EventDto;
+import com.parser.dto.InformationDto;
+import com.parser.dto.SportDto;
+import com.parser.dto.TourneyDto;
+import com.parser.model.entity.Information;
+import com.parser.service.*;
 import lombok.AllArgsConstructor;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @AllArgsConstructor
 @Service
 @EnableScheduling
 @PropertySource("classpath:values.properties")
-public class ParserServiceImpl {
-    private final SportRepository sportRepository;
-    private final TourneyRepository tourneyRepository;
-    private final EventRepository eventRepository;
-    private final List<Sport> sports = new ArrayList<>();
-    private final List<Tourney> tourneys = new ArrayList<>();
+public class ParserServiceImpl implements ParserService {
+    private final TourneyService tourneyService;
+    private final EventService eventService;
+    private final SportService sportService;
+    private final InformationService informationService;
 
+    private final String API_URL = "https://www.marathonbet.by/su/all-events.htm";
 
-    private final String API_URL = "https://www.marathonbet.by/su/betting/?interval=H1";
     private final String API_INTERVAL = "?interval=H1";
     private final String API_HTTP = "https://www.marathonbet.by";
 
@@ -51,66 +49,75 @@ public class ParserServiceImpl {
 //    @Value("${parser.API.HTTP}")
 //    private final String API_HTTP;
 
-//
-//    private String apiURIBuilder() {
-//        return UriComponentsBuilder.fromHttpUrl(API_URL)
-//                .replaceQueryParam("interval", API_INTERVAL)
-//                .build()
-//                .toString();
-//    }
-
-
-    @Scheduled(fixedDelay = 60000)
-    public void parser() throws IOException {
-//        Document doc = Jsoup.connect(apiURIBuilder()).get();
-
+//    @Scheduled(fixedDelay = 60000)
+    public void getAllSports() throws IOException {
         Document doc = Jsoup.connect(API_URL).get();
         Elements sportElements = doc.getElementsByAttributeValue("class", "sport-category-label");
+
         for (Element element : sportElements) {
             String names = element.getElementsByClass("sport-category-label").first().text();
             String detailsLink = element.attr("href");
-//            List<Sport> allSports= sportRepository.findAll();
-            Sport sport = new Sport();
+            SportDto sport = new SportDto();
             sport.setName(names);
             sport.setUrl(API_HTTP + detailsLink + API_INTERVAL);
-            sports.add(sport);
-            sportRepository.save(sport);
+            sportService.save(sport);
         }
+    }
+
+//    @Scheduled(fixedDelay = 60000)
+    public void getAllTourneys() throws IOException {
+
+        InformationDto informationDto = new InformationDto();
+        Information information = informationService.save(informationDto);
 
 
-        for (Sport sportKind : sports) {
-            Document document = Jsoup.connect(sportKind.getUrl()).get();
+        for (SportDto sport : sportService.findAll()) {
+            Document document = Jsoup.connect(sport.getUrl()).get();
             Elements tourneyElements = document.getElementsByAttributeValue("class", "category-label-link");
+
             for (Element element : tourneyElements) {
-                String names = element.getElementsByClass("category-label").first().text();
-                String detailsLink = element.attr("href");
-                Tourney tourney = new Tourney();
-                tourney.setName(names);
-                tourney.setUrl(API_HTTP + detailsLink + API_INTERVAL);
-                tourney.setSport(sportKind);
-                tourneys.add(tourney);
-                tourneyRepository.save(tourney);
+                    String names = element.getElementsByClass("category-label").first().text();
+                    String detailsLink = element.attr("href");
+                    TourneyDto tourney = new TourneyDto();
+                    tourney.setName(names);
+                    tourney.setUrl(API_HTTP + detailsLink + API_INTERVAL);
+                    tourney.setSport(sport);
+                    tourney.setInformation(informationService.toDto(information));
+                    tourneyService.save(tourney);
+
             }
         }
+        getAllEvents();
+    }
 
-        for (Tourney tourney : tourneys) {
+
+    public void getAllEvents() throws IOException {
+
+        for (TourneyDto tourney : tourneyService.findByTheLastInsert()) {
             Document postDetailsDoc = Jsoup.connect(tourney.getUrl()).get();
             Elements eventElements = postDetailsDoc.getElementsByAttributeValue("class", "bg coupon-row");
+
             for (Element element : eventElements) {
                 String names1 = element.attr("data-event-name");
                 String detailsLink = element.getElementsByAttributeValue("class", "member-link").attr("href");
                 String time = element.getElementsByClass("date date-short").first().text();
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-                LocalTime localtime = LocalTime.parse(time, formatter);
-                Event event = new Event();
+                EventDto event = new EventDto();
                 event.setName(names1);
-                event.setTime(localtime);
+                event.setTime(parseTime(time));
                 event.setUrl(API_HTTP + detailsLink);
                 event.setTourney(tourney);
-                eventRepository.save(event);
+                eventService.save(event);
             }
         }
     }
+
+
+    private LocalTime parseTime(String time) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+        return LocalTime.parse(time, formatter);
+    }
+
+
 }
 
 
