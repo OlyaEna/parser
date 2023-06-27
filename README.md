@@ -1,6 +1,6 @@
 <h1 align="center">Парсер HTML</h1> 
 <h2> Tools</h2>
-Java(17), Spring Framework(Boot, Data JPA), Hibernate, MySQL, Maven, Lombok, REST.
+Java(17), Spring Framework(Boot, Data JPA, MVC), Hibernate, MySQL, Maven, Lombok, REST.
 
 Выполнение:
 Программа парсит сайт со спортивными событиями. Собирает данные (вид спорта, турнир, время начала турнира, ссылка на событие) обо всех матчах, которые ожидаются в ближайший час. 
