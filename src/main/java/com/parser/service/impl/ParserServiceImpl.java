@@ -11,6 +11,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -29,21 +30,16 @@ public class ParserServiceImpl implements ParserService {
     private final SportService sportService;
     private final InformationService informationService;
 
-    private final String API_URL = "https://www.marathonbet.by/su/all-events.htm";
-
-    private final String API_INTERVAL = "?interval=H1";
-    private final String API_HTTP = "https://www.marathonbet.by";
 
 
-//
-//    @Value("${parser.API.URL}")
-//    private final String API_URL;
+    @Value("${parser.API.URL}")
+    private final String API_URL;
 
-//    @Value("${parser.API.INTERVAL}")
-//    private final String API_INTERVAL;
+    @Value("${parser.API.INTERVAL}")
+    private final String API_INTERVAL;
 
-//    @Value("${parser.API.HTTP}")
-//    private final String API_HTTP;
+    @Value("${parser.API.HTTP}")
+    private final String API_HTTP;
 
     public void getAllSports() throws IOException {
         Document doc = Jsoup.connect(API_URL).get();
@@ -59,7 +55,7 @@ public class ParserServiceImpl implements ParserService {
         }
     }
 
-//    @Scheduled(fixedDelay = 60000)
+    @Scheduled(fixedDelay = 60000)
     public void getAllTourneys() throws IOException {
 
         InformationDto informationDto = new InformationDto();
