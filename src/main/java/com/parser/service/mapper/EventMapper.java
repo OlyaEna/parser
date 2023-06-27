@@ -19,7 +19,6 @@ import java.util.Objects;
 @Data
 public class EventMapper {
     private ModelMapper modelMapper;
-    private final TourneyRepository tourneyRepository;
 
 
     public Event toEntity(EventDto dto) {
@@ -34,41 +33,5 @@ public class EventMapper {
         return Objects.isNull(entity) ? null : modelMapper.map(entity, new TypeToken<List<EventDto>>() {
         }.getType());
     }
-
-//
-//    @PostConstruct
-//    public void setupMapper() {
-//        modelMapper.createTypeMap(Event.class, EventDto.class)
-//                .addMappings(m -> m.skip(EventDto::setTourney)).setPostConverter(toDtoConverter());
-//        modelMapper.createTypeMap(EventDto.class, Event.class)
-//                .addMappings(m -> m.skip(Event::setTourney)).setPostConverter(toEntityConverter());
-//    }
-//
-//    public Converter<EventDto, Event> toEntityConverter() {
-//        return context -> {
-//            EventDto source = context.getSource();
-//            Event destination = context.getDestination();
-//            mapSpecificFields(source, destination);
-//            return context.getDestination();
-//        };
-//    }
-//
-//    public Converter<Event, EventDto> toDtoConverter() {
-//        return context -> {
-//            Event source = context.getSource();
-//            EventDto destination = context.getDestination();
-//            mapSpecificFields(source, destination);
-//            return context.getDestination();
-//        };
-//    }
-//
-//
-//    public void mapSpecificFields(Event source, EventDto destination) {
-//        destination.setTourney(Objects.isNull(source) || Objects.isNull(source.getTourney()) ? null : source.getTourney().getName());
-//    }
-//
-//    void mapSpecificFields(EventDto source, Event destination) {
-//        destination.setTourney(tourneyRepository.findByName(source.getTourney()).orElse(null));
-//    }
 }
 

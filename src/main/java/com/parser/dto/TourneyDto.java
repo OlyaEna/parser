@@ -1,6 +1,5 @@
 package com.parser.dto;
 
-import com.parser.model.entity.Sport;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;

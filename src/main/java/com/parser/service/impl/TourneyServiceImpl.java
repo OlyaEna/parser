@@ -1,20 +1,13 @@
 package com.parser.service.impl;
 
-import com.parser.dto.InformationDto;
-import com.parser.dto.SportDto;
 import com.parser.dto.TourneyDto;
-import com.parser.model.entity.Information;
-import com.parser.model.entity.Sport;
 import com.parser.model.entity.Tourney;
 import com.parser.model.repository.TourneyRepository;
 import com.parser.service.TourneyService;
-import com.parser.service.mapper.InformationMapper;
-import com.parser.service.mapper.SportMapper;
 import com.parser.service.mapper.TourneyMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service

@@ -11,5 +11,6 @@ public interface SportService {
     SportDto save(SportDto sportDto);
 
     Set<SportDto> findAllSportsByTourney();
+
     SportDto findById(Long id);
 }

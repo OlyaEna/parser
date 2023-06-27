@@ -8,7 +8,6 @@ import java.time.LocalTime;
 
 @Data
 @Entity
-@EqualsAndHashCode
 @Table(name = "event")
 public class Event {
     @Id
@@ -18,7 +17,6 @@ public class Event {
     private String url;
     private LocalTime time;
     @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-//    @ManyToOne
     private Tourney tourney;
 
 }

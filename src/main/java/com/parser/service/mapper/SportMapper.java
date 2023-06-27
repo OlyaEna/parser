@@ -17,7 +17,6 @@ import java.util.Objects;
 @Data
 public class SportMapper {
     private ModelMapper modelMapper;
-    private final SportRepository sportRepository;
 
     public Sport toEntity(SportDto dto) {
         return Objects.isNull(dto) ? null : modelMapper.map(dto, Sport.class);

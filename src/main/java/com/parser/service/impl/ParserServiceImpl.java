@@ -19,10 +19,6 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 @AllArgsConstructor
 @Service
 @EnableScheduling
@@ -49,7 +45,6 @@ public class ParserServiceImpl implements ParserService {
 //    @Value("${parser.API.HTTP}")
 //    private final String API_HTTP;
 
-//    @Scheduled(fixedDelay = 60000)
     public void getAllSports() throws IOException {
         Document doc = Jsoup.connect(API_URL).get();
         Elements sportElements = doc.getElementsByAttributeValue("class", "sport-category-label");

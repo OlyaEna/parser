@@ -10,6 +10,7 @@ public interface TourneyService {
     List<TourneyDto> findByTheLastInsert();
 
     List<TourneyDto> findTourneyBySportId(Long id);
+
     TourneyDto findById(Long id);
 
     List<TourneyDto> findTourneysById(Long id);

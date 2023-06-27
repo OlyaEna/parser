@@ -10,8 +10,6 @@ import java.util.Optional;
 
 @Repository
 public interface TourneyRepository extends JpaRepository<Tourney, Long> {
-    Optional<Tourney> findByName(String name);
-
     @Query(value = "select * from tourney t where t.information_id=(select max(information_id) from tourney)", nativeQuery = true)
     List<Tourney> findByTheLastInsert();
 

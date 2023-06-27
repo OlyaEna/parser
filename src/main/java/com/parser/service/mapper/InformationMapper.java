@@ -17,7 +17,6 @@ import java.util.Objects;
 @Data
 public class InformationMapper {
     private ModelMapper modelMapper;
-    private final InformationRepository informationRepository;
 
     public Information toEntity(InformationDto dto) {
         return Objects.isNull(dto) ? null : modelMapper.map(dto, Information.class);
